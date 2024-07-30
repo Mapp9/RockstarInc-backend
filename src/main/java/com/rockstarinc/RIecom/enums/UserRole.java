@@ -1,4 +1,4 @@
-package com.rockstarinc.enums;
+package com.rockstarinc.RIecom.enums;
 
 public enum UserRole {
     

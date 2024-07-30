@@ -1,6 +1,6 @@
 package com.rockstarinc.RIecom.entity;
 
-import com.rockstarinc.enums.UserRole;
+import com.rockstarinc.RIecom.enums.UserRole;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
