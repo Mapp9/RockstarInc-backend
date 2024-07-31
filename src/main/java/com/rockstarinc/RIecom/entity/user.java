@@ -18,11 +18,13 @@ public class user {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    // Datos de los usuarios
     private String email;
+    private String password;
     private String name;
     private UserRole role;
 
+    // Define una columna de tipo Large Object (BLOB) para almacenar imágenes u otros datos binarios
     @Lob
     @Column(columnDefinition = "longblob")
     private byte[] img;
