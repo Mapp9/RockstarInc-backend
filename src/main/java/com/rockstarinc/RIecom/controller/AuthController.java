@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rockstarinc.RIecom.dto.AuthenticationRequest;
+import com.rockstarinc.RIecom.dto.SignupRequest;
+import com.rockstarinc.RIecom.dto.UserDto;
 import com.rockstarinc.RIecom.entity.user;
 import com.rockstarinc.RIecom.repository.UserRepository;
+import com.rockstarinc.RIecom.services.auth.AuthService;
 import com.rockstarinc.RIecom.utils.JwtUtil;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,6 +42,8 @@ public class AuthController {
     // Constantes para el prefijo y el nombre del encabezado de autorización
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization ";
+
+    private final AuthService authService;
     // Endpoint para autenticar al usuario
     @PostMapping("/authenticate")
     public void createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest,
@@ -66,6 +73,18 @@ public class AuthController {
             // Agregar el token JWT al encabezado de la respuesta
             response.addHeader(HEADER_STRING, TOKEN_PREFIX + jwt);
         }
+
     }
+
+    @PostMapping("/sign-up")
+        public ResponseEntity<?> signupUser(@RequestBody SignupRequest signupRequest){
+            // Verifica si ya existe un usuario con el e-mail proporcionado.
+            if(authService.hasUserWithEmail(signupRequest.getEmail())){
+                return new ResponseEntity<>("User already exist", HttpStatus.NOT_ACCEPTABLE);
+            }
+            // Crea un nuevo usuario utilizando el servicio de autenticación.
+            UserDto userDto = authService.createUser(signupRequest);
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        }
     
 }
