@@ -1,17 +1,17 @@
 package com.rockstarinc.RIecom.utils;
 
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
@@ -34,14 +34,15 @@ public class JwtUtil {
     // Crea el token JWT con las reclamaciones proporcionadas y el nombre de usuario
     private String createToken(Map<String, Object> claims, String userName) {
         return Jwts.builder()
-            .setClaims(claims) // Establece las reclamaciones en el JWT
-            .setSubject(userName) // Establece el sujeto(nombre de usuario)
-            .setIssuedAt(new Date(System.currentTimeMillis())) // Fecha de emisión del token
-            .setExpiration(new Date(System.currentTimeMillis() + 10000 * 60 * 30)) // Fecha de expiración del token
-            .signWith(getSignKey(), SignatureAlgorithm.HS256).compact(); // Firma el token con la clave secreta
+            .claims(claims) // Establece las reclamaciones en el JWT
+            .subject(userName) // Establece el sujeto(nombre de usuario)
+            .issuedAt(new Date(System.currentTimeMillis())) // Fecha de emisión del token
+            .expiration(new Date(System.currentTimeMillis() + 10000 * 60 * 30)) // Fecha de expiración del token
+            .signWith(getSignKey())
+            .compact(); // Firma el token con la clave secreta
     }
     // Devuelve la clave de firma para el JWT
-    private Key getSignKey() {
+    private SecretKey getSignKey() {
         byte[] keybytes = Decoders.BASE64.decode(SECRET); // Decodifica la clave secreta
         return Keys.hmacShaKeyFor(keybytes); // Crea una clave HMAC para firmar
     }
@@ -56,7 +57,7 @@ public class JwtUtil {
     }
     // Extrae todas las reclamaciones del token JWT
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
+        return Jwts.parser().verifyWith(getSignKey()).build().parseSignedClaims(token).getPayload();
     }
     // Verifica si el token ha expirado
     private Boolean isTokenExpired(String token) {

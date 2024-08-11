@@ -41,7 +41,7 @@ public class AuthController {
 
     // Constantes para el prefijo y el nombre del encabezado de autorización
     public static final String TOKEN_PREFIX = "Bearer ";
-    public static final String HEADER_STRING = "Authorization ";
+    public static final String HEADER_STRING = "Authorization";
 
     private final AuthService authService;
     // Endpoint para autenticar al usuario

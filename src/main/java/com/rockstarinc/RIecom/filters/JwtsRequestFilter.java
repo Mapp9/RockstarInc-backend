@@ -3,6 +3,7 @@ package com.rockstarinc.RIecom.filters;
 
 import java.io.IOException;
 
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,9 +30,9 @@ public class JwtsRequestFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request,@NonNull HttpServletResponse response,@NonNull FilterChain filterChain) throws ServletException, IOException {
         // Obtener el encabezado Authorization del request
-        String authHeader = request.getHeader("Authorization ");
+        String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
         // Verificar si el encabezado contiene un token JWT válido
