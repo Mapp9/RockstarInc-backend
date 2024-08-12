@@ -21,13 +21,15 @@ public class AuthServiceImpl implements AuthService {
     // Inyecta una instancia de BCryptPasswordEncoder para encriptar las contraseñas.
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;    
+
+    @Override
     // Método para crear un nuevo usuario basado en los datos de SignupRequest.
     public UserDto createUser(SignupRequest signupRequest){
         // Crea una nueva instancia de la entidad 'user'.
         user user = new user();
         user.setEmail(signupRequest.getEmail()); // Establece el email del usuario.
         user.setName(signupRequest.getName()); // Establece el nombre del usuario.
-        user.setPassword(new BCryptPasswordEncoder().encode(signupRequest.getPassword())); // Encripta y establece la contraseña del usuario.
+        user.setPassword(bCryptPasswordEncoder.encode(signupRequest.getPassword())); // Encripta y establece la contraseña del usuario.
         user.setRole(UserRole.CUSTOMER); // Asigna el rol de 'CUSTOMER' al usuario.
         // Guarda el nuevo usuario en la base de datos y obtiene la instancia creada.
         user createdUser = userRepository.save(user);
@@ -40,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
         return userDto; // Devuelve el DTO del usuario creado.
     }
 
-
+    @Override
     // Método para verificar si existe un usuario con un email específico.
     public Boolean hasUserWithEmail(String email){
         return userRepository.findFirstByEmail(email).isPresent();
@@ -57,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
             user.setEmail("admin@test.com"); // Establece el email del administrador.
             user.setName("admin"); // Establece el nombre del administrador.
             user.setRole(UserRole.ADMIN); // Asigna el rol de 'ADMIN'.
-            user.setPassword(new BCryptPasswordEncoder().encode("admin")); // Encripta y establece la contraseña del administrador.
+            user.setPassword(bCryptPasswordEncoder.encode("admin")); // Encripta y establece la contraseña del administrador.
             userRepository.save(user); //Guarda la cuenta de administrador en la base de datos.
         }
     }

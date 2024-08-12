@@ -20,6 +20,7 @@ public class AdminProductServiceImpl implements AdminProductService {
 
     private final CategoryRepository categoryRepository;
 
+    @Override
     public ProductDto addProduct(ProductDto productDto) throws IOException {
         Product product = new Product();
         product.setName(productDto.getName());
@@ -33,8 +34,15 @@ public class AdminProductServiceImpl implements AdminProductService {
         return productRepository.save(product).getDto();
     }
 
+    @Override
     public List<ProductDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
+        return products.stream().map(Product::getDto).toList();
+    }
+
+    @Override
+    public List<ProductDto> getAllProductByName(String name) {
+        List<Product> products = productRepository.findAllByNameContaining(name);
         return products.stream().map(Product::getDto).toList();
     }
 }
