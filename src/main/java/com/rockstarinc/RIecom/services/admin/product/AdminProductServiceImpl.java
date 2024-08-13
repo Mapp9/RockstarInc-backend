@@ -2,6 +2,7 @@ package com.rockstarinc.RIecom.services.admin.product;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -44,5 +45,14 @@ public class AdminProductServiceImpl implements AdminProductService {
     public List<ProductDto> getAllProductByName(String name) {
         List<Product> products = productRepository.findAllByNameContaining(name);
         return products.stream().map(Product::getDto).toList();
+    }
+
+    public boolean deleteProduct(Long id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            productRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }
