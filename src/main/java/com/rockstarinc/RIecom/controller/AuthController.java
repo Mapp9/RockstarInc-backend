@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rockstarinc.RIecom.dto.AuthenticationRequest;
 import com.rockstarinc.RIecom.dto.SignupRequest;
 import com.rockstarinc.RIecom.dto.UserDto;
-import com.rockstarinc.RIecom.entity.user;
+import com.rockstarinc.RIecom.entity.User;
 import com.rockstarinc.RIecom.repository.UserRepository;
 import com.rockstarinc.RIecom.services.auth.AuthService;
 import com.rockstarinc.RIecom.utils.JwtUtil;
@@ -59,7 +59,7 @@ public class AuthController {
         // Cargar los detalles del usuario para el nombre de usuario proporcionado
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         // Buscar al usuario en el repositorio usando su correo electrónico
-        Optional<user> optionalUser = userRepository.findFirstByEmail(userDetails.getUsername());
+        Optional<User> optionalUser = userRepository.findFirstByEmail(userDetails.getUsername());
         // Generar un token JWT para el usuario autenticado
         final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 

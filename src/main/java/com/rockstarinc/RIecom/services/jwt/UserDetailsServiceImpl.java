@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.rockstarinc.RIecom.entity.user;
+import com.rockstarinc.RIecom.entity.User;
 import com.rockstarinc.RIecom.repository.UserRepository;
 
 @Service
@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // Busca un usuario por su email en el repositorio
-        Optional<user> optionalUser = userRepository.findFirstByEmail(username);
+        Optional<User> optionalUser = userRepository.findFirstByEmail(username);
         // Si no se encuentra el usuario, se lanza una excepción
         if(optionalUser.isEmpty()) throw new UsernameNotFoundException("Username not found", null);
         // Si se encuentra el usuario, se retorna un objeto UserDetails con los detalles del usuario
